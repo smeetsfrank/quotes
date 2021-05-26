@@ -9,7 +9,7 @@ const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameStateProps>({ mode: 'not-playing' });
 
   const gameStateHandler = (mode: string) => {
-    setGameState((prevState) => ({ ...prevState, mode: mode }));
+    setGameState((prevState) => ({ ...prevState, mode }));
   };
 
   return (
