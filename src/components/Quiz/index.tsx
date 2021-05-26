@@ -16,19 +16,18 @@ import classes from './index.module.scss';
 
 const Question: React.FC = () => {
   const [game, setGame] = useState<GameProps>({ answers: [], step: 0, progress: 0 });
-  const [quotes, setQuotes] = useState<any | null>(null);
-  const [authors, setAuthors] = useState<any | null>(null);
+  const [quotes, setQuotes] = useState<any>();
+  const [authors, setAuthors] = useState<any>();
   const [imageRendered, setImageRendered] = useState<boolean>(false);
   const [backgroundImage, setBackgroundImage] = useState<string>('placeholder.jpg');
 
-  const { sendRequest: fetchQuote, isLoading } = useHttp();
+  const { sendRequest: fetchQuote } = useHttp();
 
   const quoteHandler = (data: QuoteProps[]) => {
     // Strip unknown authors from list
     const filterQuotes = data.filter((item: QuoteProps) => item.author.toLowerCase() !== 'unknown');
     // Select 5 random quotes from stripped list
     const selectGameQuotes = filterQuotes.sort(() => 0.5 - Math.random()).slice(0, 5);
-
     setQuotes(selectGameQuotes);
 
     const filterAuthors = filterQuotes.map((item: QuoteProps) => ({
@@ -45,7 +44,7 @@ const Question: React.FC = () => {
     setAuthors(removeDuplicateAuthors);
   };
 
-  let answer: any;
+  let answer: number;
   const currentStep = game.step!;
   const gameProgress = game.progress!;
 
@@ -66,7 +65,6 @@ const Question: React.FC = () => {
       return data;
     } catch (err) {
       if (err.response.status === 403) {
-        // alert('Exceeded demo API rate limit');
         setBackgroundImage('placeholder.jpg');
         setImageRendered(true);
         return null;
