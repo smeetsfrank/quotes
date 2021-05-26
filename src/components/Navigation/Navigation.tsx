@@ -5,7 +5,7 @@ import classes from './Navigation.module.scss';
 
 type Props = {
   gameState: GameStateProps;
-  gameStateHandler: (state: string) => void;
+  gameStateHandler: (mode: string) => void;
 }
 
 const Navigation: React.FC<Props> = ({
