@@ -11,7 +11,7 @@ const BackgroundImage: React.FC<Props> = ({ imageUrl, checkingImageLoad }) => (
     <img
       className={classes['increase-anim']}
       src={imageUrl}
-      alt="QUoTE"
+      alt="quote-background"
       onLoad={checkingImageLoad}
     />
   </div>
