@@ -2,15 +2,17 @@ export interface QuoteProps {
     id: number;
     author: string;
     quote: string;
+    permalink?: string;
 }
 
-export interface QuotesArr {
+export interface Quotes {
     item: QuoteProps[];
+    prevState: null;
 }
 
-export type GameProps = {
+export interface GameProps {
     answers: number[];
-    step?: number;
+    step: number;
     progress: number;
 }
 
