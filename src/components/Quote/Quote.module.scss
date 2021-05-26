@@ -1,0 +1,57 @@
+@use '../../assets/styles/config' as *;
+
+.quote-wrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 60vw;
+    color: $white;
+    @media screen and (min-width: $screen-1024) {
+        max-width: 80vw;
+    }
+
+    h2 {
+        font-size: 2vh;
+        line-height: calc(100% + 1rem);
+        font-weight: 400;
+        text-transform: uppercase;
+        @media screen and (min-width: $screen-768) {
+            font-size: 3vh;
+        }
+        @media screen and (min-width: $screen-1024) {
+            font-size: 4.5vh;
+        }
+    }
+
+    h3 {
+        font-size: 1.5vh;
+        font-weight: 400;
+        @media screen and (min-width: $screen-768) {
+            font-size: 2.5vh;
+        }
+    }
+
+    .inspire {
+        font-family: $primary-font;
+        position: fixed;
+        bottom: 15vh;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        background-color: $yellow;
+        display: inline-flex;
+        align-self: center;
+        padding: 0.75rem 1.25rem;
+        border: 2px solid $yellow;
+        border-radius: 2rem;
+        color: $black;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            transform: scale(1.1);
+            background: $yellow;
+            color: $black;
+            font-weight: 700;
+        }
+    }
+}

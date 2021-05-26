@@ -1,0 +1,101 @@
+@use '../../assets/styles/config' as *;
+
+.quote-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 70vw;
+    color: $white;
+
+    h2 {
+        font-size: 2vh;
+        line-height: calc(100% + 1rem);
+        font-weight: 400;
+        text-transform: uppercase;
+        @media screen and (min-width: $screen-768) {
+            font-size: 3vh;
+        }
+        @media screen and (min-width: $screen-1024) {
+            font-size: 4.5vh;
+        }
+    }
+
+    h3 {
+        font-size: 1.5vh;
+        font-weight: 400;
+        @media screen and (min-width: $screen-768) {
+            font-size: 2.5vh;
+        }
+    }
+
+    .options {
+        display: flex;
+        flex-direction: column;
+        margin: 2rem 0 1rem;
+    }
+
+    .submit {
+        display: inline-flex;
+        padding: 0.75rem 1.25rem;
+        border: 2px solid $yellow;
+        border-radius: 2rem;
+        font-family: $primary-font;
+        background-color: $yellow;
+        color: $black;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            transform: scale(1.1);
+            background: $yellow;
+            color: $black;
+            font-weight: 700;
+        }
+    }
+}
+
+.scoreboard {
+    background: $white;
+    padding: 1.5rem 2rem;
+    border-radius: 1rem;
+    max-height: 80vh;
+    overflow-y: scroll;
+    color: $black;
+
+    @media screen and (min-width: $screen-768) {
+        padding: 2.5rem 3rem;
+        border-radius: 2rem;
+    }
+
+    h3 {
+        font-size: 2.5vh;
+    }
+
+    p {
+        font-size: 0.8rem;
+
+        @media screen and (min-width: $screen-768) {
+            font-size: 0.9rem;
+        }
+    }
+
+    .restart {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        background: none;
+        color: $black;
+        border: 0;
+        cursor: pointer;
+        transition: 0.2s ease-out;
+
+        &:hover {
+            font-size: 1.25rem;
+            transform: rotate(-45deg);
+        }
+    }
+
+    li:not(:last-child) {
+        margin: 0 0 1.5rem 0;
+    }
+}

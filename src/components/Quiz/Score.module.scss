@@ -1,0 +1,24 @@
+@use '../../assets//styles/config' as *;
+
+.message {
+    font-size: 1.5rem;
+    margin: 0 0 1rem 0;
+    @media screen and (min-width: $screen-768) {
+        font-size: 2rem;
+    }
+}
+
+h3 {
+    display: inline-flex;
+    align-items: center;
+}
+
+.correct,
+.incorrect {
+    margin: 0 0 0 0.5rem;
+    color: green;
+}
+
+.incorrect {
+    color: red;
+}
