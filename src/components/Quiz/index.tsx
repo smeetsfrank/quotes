@@ -116,13 +116,13 @@ const Question: React.FC = () => {
     }
   };
 
-  const checkingLoad = () => {
+  const checkRenderedImage = () => {
     setImageRendered(true);
   };
 
   return (
     <>
-      <BackgroundImage checkingImageLoad={checkingLoad} imageUrl={backgroundImage} />
+      <BackgroundImage checkRenderedImage={checkRenderedImage} imageUrl={backgroundImage} />
       <div className={`${classes['quote-wrapper']} ${gameProgress === 6 && classes.scoreboard}`}>
         {!imageRendered && <Loader />}
         {(gameProgress < 5 && imageRendered) && (

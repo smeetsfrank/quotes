@@ -3,16 +3,16 @@ import classes from './BackgroundImage.module.scss';
 
 type Props = {
     imageUrl: string;
-    checkingImageLoad: () => void;
+    checkRenderedImage: () => void;
 }
 
-const BackgroundImage: React.FC<Props> = ({ imageUrl, checkingImageLoad }) => (
+const BackgroundImage: React.FC<Props> = ({ imageUrl, checkRenderedImage }) => (
   <div className={classes['background-wrapper']}>
     <img
       className={classes['increase-anim']}
       src={imageUrl}
       alt="quote-background"
-      onLoad={checkingImageLoad}
+      onLoad={checkRenderedImage}
     />
   </div>
 );

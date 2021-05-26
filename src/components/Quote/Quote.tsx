@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import classes from './Quote.module.scss';
+import { QuoteProps } from '../../models/models';
+
 import BackgroundImage from '../UI/BackgroundImage/BackgroundImage';
 import Loader from '../UI/Loader/Loader';
+import classes from './Quote.module.scss';
 
 const Quote: React.FC = () => {
-  const [quote, setQuote] = useState<any | null>(null);
+  const [quote, setQuote] = useState<QuoteProps>();
   const [backgroundImage, setBackgroundImage] = useState<string>('placeholder.jpg');
-  const [imageRendered, setImageRendered] = useState<boolean>(false);
+  const [imageHasRendered, setImageHasRendered] = useState<boolean>(false);
 
   const fetchImage = async () => {
     try {
@@ -20,6 +22,8 @@ const Quote: React.FC = () => {
       const data = await response.data;
       return data;
     } catch (err) {
+      /* Added this check because we know the API has a rate limit
+         of 50 successfull calls an hour. */
       if (err.response.status === 403) {
         alert('Exceeded demo API rate limit');
         return false;
@@ -39,40 +43,41 @@ const Quote: React.FC = () => {
     }
   };
 
-  const patientlyWaiting = async () => {
-    setQuote('');
-    setImageRendered(false);
+  const fetchQuoteAndImage = async () => {
+    /* For smooth transitions between each render of a quote/background image, we wait untill
+       the image has fully rendered in the DOM instead of awaiting a successfull call. */
+    setQuote(undefined);
+    setImageHasRendered(false);
     const responseImage = await fetchImage();
+    /* Added this check to because of the limited API calls */
     if (responseImage) {
       setBackgroundImage(`${responseImage.urls.regular}&format=auto`);
     } else {
-      setImageRendered(true);
+      setImageHasRendered(true);
       setBackgroundImage('placeholder.jpg');
     }
     const responseQuote = await fetchQuote();
     setQuote(responseQuote);
   };
 
-  const checkingLoad = () => {
-    setImageRendered(true);
+  const checkRenderedImage = () => {
+    setImageHasRendered(true);
   };
 
   useEffect(() => {
-    patientlyWaiting();
+    fetchQuoteAndImage();
   }, []);
 
   return (
     <>
-      <BackgroundImage checkingImageLoad={checkingLoad} imageUrl={backgroundImage} />
-      {!imageRendered && <Loader />}
-      {imageRendered
+      <BackgroundImage checkRenderedImage={checkRenderedImage} imageUrl={backgroundImage} />
+      {!imageHasRendered && <Loader />}
+      {imageHasRendered
       && (
       <div className={classes['quote-wrapper']}>
-        <>
-          <h2>{quote?.quote}</h2>
-          <h3>{quote?.author}</h3>
-        </>
-        <button className={classes.inspire} type="button" onClick={patientlyWaiting}>Inspire me</button>
+        <h2>{quote?.quote}</h2>
+        <h3>{quote?.author}</h3>
+        <button className={classes.inspire} type="button" onClick={fetchQuoteAndImage}>Inspire me</button>
       </div>
       )}
     </>
