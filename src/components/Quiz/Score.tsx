@@ -19,7 +19,7 @@ const Score: React.FC<Props> = ({ answers, quotes }) => {
     const numbOfCorrectAnwers = checkedQuotes.filter((quote: any) => quote.correct);
     switch (numbOfCorrectAnwers.length) {
       case 0:
-        return 'Zero, Seriously?! Did i just create a whole fucking game just for you to guess zero correct answers? IT EVEN IS MULTIPLE CHOISE!! The fuck is wrong with you?';
+        return 'Zero, Seriously?! Did i just create a whole fucking game just for you to guess zero correct answers? IT EVEN IS MULTIPLE CHOICE!! The fuck is wrong with you?';
         break;
       case 1:
         return 'Just one? Ok.. Fine.. What evs';
