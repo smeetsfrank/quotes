@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
-import { QuoteProps, GameProps } from '../../models/models';
 import useHttp from '../../hooks/use-http';
+import { QuoteProps, GameProps } from '../../models/models';
 
 import Options from './Options';
 import Progress from './Progress';
@@ -24,33 +23,24 @@ const Question: React.FC = () => {
   const { sendRequest: fetchQuote } = useHttp();
 
   const quoteHandler = (data: QuoteProps[]) => {
-    // Strip unknown authors from list
+    /* Strip unknown authors from list */
     const filterQuotes = data.filter((item: QuoteProps) => item.author.toLowerCase() !== 'unknown');
-    // Select 5 random quotes from stripped list
+    /* Select 5 random quotes from stripped list */
     const selectGameQuotes = filterQuotes.sort(() => 0.5 - Math.random()).slice(0, 5);
     setQuotes(selectGameQuotes);
 
+    /* We only need to pass an id and author for implementing multiple choice */
     const filterAuthors = filterQuotes.map((item: QuoteProps) => ({
       id: item.id,
       author: item.author,
     }));
-
+    /* Remove duplicate authors */
     const removeDuplicateAuthors = filterAuthors.filter(
-      (v, i, a) => a.findIndex(
-        (t) => (t.author === v.author),
-      ) === i,
+      (value, idx, arr) => arr.findIndex(
+        (obj) => (obj.author === value.author),
+      ) === idx,
     );
-
     setAuthors(removeDuplicateAuthors);
-  };
-
-  let answer: number;
-  const currentStep = game.step!;
-  const gameProgress = game.progress!;
-
-  const correctAnswer = {
-    id: quotes?.[currentStep].id,
-    author: quotes?.[currentStep].author,
   };
 
   const fetchImage = async () => {
@@ -74,33 +64,42 @@ const Question: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchQuote({ url: 'http://quotes.stormconsultancy.co.uk/popular.json' }, quoteHandler);
-    fetchImage();
-  }, []);
+  /* let/const used within multiple functions */
+  let answer: number;
+  const currentStep = game.step!;
+  const gameProgress = game.progress!;
 
+  const correctAnswer = {
+    id: quotes?.[currentStep].id,
+    author: quotes?.[currentStep].author,
+  };
+
+  /* Selected user answer */
   const selectedOptionHandler = (id: number) => {
     answer = id;
   };
 
   const restartGame = () => {
-    fetchQuote({ url: 'http://quotes.stormconsultancy.co.uk/popular.json' }, quoteHandler);
     setGame({ answers: [], step: 0, progress: 0 });
+    fetchQuote({ url: 'http://quotes.stormconsultancy.co.uk/popular.json' }, quoteHandler);
     fetchImage();
   };
 
   // next step + save store answer
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
+    /* Bare minimal error handling */
     if (!answer) {
       alert('Please provide an answer');
       return;
     }
+    /* Resetting step on final question so we don't try
+      to fetch a non-exsisting quote */
     if (gameProgress === 4) {
       setGame((prevState: GameProps) => ({
         answers: [...prevState.answers, answer],
         step: 0,
-        progress: 6,
+        progress: gameProgress + 1,
       }));
     }
     if (gameProgress < 4) {
@@ -118,10 +117,15 @@ const Question: React.FC = () => {
     setImageRendered(true);
   };
 
+  useEffect(() => {
+    fetchQuote({ url: 'http://quotes.stormconsultancy.co.uk/popular.json' }, quoteHandler);
+    fetchImage();
+  }, []);
+
   return (
     <>
       <BackgroundImage checkRenderedImage={checkRenderedImage} imageUrl={backgroundImage} />
-      <div className={`${classes['quote-wrapper']} ${gameProgress === 6 && classes.scoreboard}`}>
+      <div className={`${classes['quote-wrapper']} ${gameProgress === 5 && classes.scoreboard}`}>
         {!imageRendered && <Loader />}
         {(gameProgress < 5 && imageRendered) && (
         <>
@@ -138,8 +142,8 @@ const Question: React.FC = () => {
           </form>
         </>
         )}
-        {gameProgress !== 6 && <Progress step={game?.step} /> }
-        {(gameProgress === 6) && (
+        {gameProgress !== 5 && <Progress step={game?.step} /> }
+        {(gameProgress === 5) && (
         <>
           <button type="button" onClick={restartGame} className={classes.restart}>
             <FontAwesomeIcon icon={faRedoAlt} />
