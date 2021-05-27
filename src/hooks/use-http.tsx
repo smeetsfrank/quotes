@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const useHttp = () => {
+function useHttp(): any {
   const [isLoading, setIsLoading] = useState<boolean>();
   const [error, setError] = useState<boolean>(false);
 
@@ -24,6 +24,6 @@ const useHttp = () => {
     isLoading,
     error,
   };
-};
+}
 
 export default useHttp;
