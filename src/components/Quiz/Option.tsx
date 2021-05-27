@@ -9,11 +9,10 @@ type Props = {
 }
 
 const RadioButton: React.FC<Props> = ({ id, author, selectedOption }) => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement | any>(null);
 
   const selectedOptionHandler = () => {
-    const option = Number(inputRef.current?.id);
-    selectedOption(option);
+    selectedOption(inputRef.current.id);
   };
 
   return (
