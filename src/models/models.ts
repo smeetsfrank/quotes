@@ -19,3 +19,7 @@ export interface GameProps {
 export interface GameStateProps {
     mode: string;
 }
+
+export interface FetchedBackground {
+    urls: { regular: string }
+}

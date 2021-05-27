@@ -3,7 +3,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 import useHttp from '../../hooks/use-http';
-import { QuoteProps, GameProps } from '../../models/models';
+import { QuoteProps, GameProps, FetchedBackground } from '../../models/models';
 
 import Options from './Options';
 import Progress from './Progress';
@@ -45,19 +45,19 @@ const Question: React.FC = () => {
 
   const fetchImage = async () => {
     try {
-      const response = await axios.get(`https://api.unsplash.com/photos/random?${
+      const response = await axios.get<FetchedBackground>(`https://api.unsplash.com/photos/random?${
         new URLSearchParams({
           query: 'minimal',
           client_id: 'MzZUemb6Dpm7QPA1Edx12DF-O81dgKq7rrDkB91MPRE',
         })}`);
-      const data = await response.data;
+      const { data } = response;
       setBackgroundImage(`${data.urls.regular}&format=auto`);
-      return data;
+      return;
     } catch (err) {
       if (err.response.status === 403) {
         setBackgroundImage('placeholder.jpg');
         setImageRendered(true);
-        return null;
+        return;
       }
       const errorMessage = err.response.data;
       throw new Error(`Error: ${errorMessage}`);

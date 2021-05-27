@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import { QuoteProps } from '../../models/models';
+import { QuoteProps, FetchedBackground } from '../../models/models';
 
 import BackgroundImage from '../UI/BackgroundImage/BackgroundImage';
 import Loader from '../UI/Loader/Loader';
@@ -14,13 +14,13 @@ const Quote: React.FC = () => {
 
   const fetchImage = async () => {
     try {
-      const response = await axios.get(`https://api.unsplash.com/photos/random?${
+      const response = await axios.get<FetchedBackground>(`https://api.unsplash.com/photos/random?${
         new URLSearchParams({
           query: 'minimal',
           client_id: 'MzZUemb6Dpm7QPA1Edx12DF-O81dgKq7rrDkB91MPRE',
         })}`);
-      const data = await response.data;
-      return data;
+      const { data } = response;
+      return data.urls.regular;
     } catch (err) {
       /* Added this check because we know the API has a rate limit
          of 50 successfull calls an hour. */
@@ -35,8 +35,8 @@ const Quote: React.FC = () => {
 
   const fetchQuote = async () => {
     try {
-      const response = await axios.get('http://quotes.stormconsultancy.co.uk/random.json');
-      const data = await response.data;
+      const response = await axios.get<QuoteProps>('http://quotes.stormconsultancy.co.uk/random.json');
+      const { data } = response;
       return data;
     } catch (err) {
       throw new Error('Error');
@@ -51,7 +51,7 @@ const Quote: React.FC = () => {
     const responseImage = await fetchImage();
     /* Added this check to because of the limited API calls */
     if (responseImage) {
-      setBackgroundImage(`${responseImage.urls.regular}&format=auto`);
+      setBackgroundImage(`${responseImage}&format=auto`);
     } else {
       setImageHasRendered(true);
       setBackgroundImage('placeholder.jpg');
