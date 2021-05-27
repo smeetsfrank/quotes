@@ -10,7 +10,7 @@ type Option = {
 type Props = {
   authors: Option[];
   correctAnswer: Option;
-  selectedOption: (id: number) => any;
+  selectedOption: (id: number) => void;
 }
 
 const Answer: React.FC<Props> = ({ authors, correctAnswer, selectedOption }) => {
