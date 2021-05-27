@@ -8,7 +8,6 @@ export interface QuoteProps {
 
 export interface Quotes {
     item: QuoteProps[];
-    prevState: null;
 }
 
 export interface GameProps {
