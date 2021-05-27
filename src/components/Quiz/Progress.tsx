@@ -3,7 +3,7 @@ import React from 'react';
 import classes from './Progress.module.scss';
 
 type Props = {
-    step: number | undefined;
+    step: number;
 }
 
 const Progress: React.FC<Props> = ({ step }) => (
