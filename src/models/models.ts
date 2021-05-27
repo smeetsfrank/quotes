@@ -21,5 +21,5 @@ export interface GameStateProps {
 }
 
 export interface FetchedBackground {
-    urls: { regular: string }
+    urls?: { regular: string };
 }

@@ -51,7 +51,7 @@ const Question: React.FC = () => {
           client_id: 'MzZUemb6Dpm7QPA1Edx12DF-O81dgKq7rrDkB91MPRE',
         })}`);
       const { data } = response;
-      setBackgroundImage(`${data.urls.regular}&format=auto`);
+      setBackgroundImage(`${data.urls?.regular}&format=auto`);
       return;
     } catch (err) {
       if (err.response.status === 403) {

@@ -20,7 +20,7 @@ const Quote: React.FC = () => {
           client_id: 'MzZUemb6Dpm7QPA1Edx12DF-O81dgKq7rrDkB91MPRE',
         })}`);
       const { data } = response;
-      return data.urls.regular;
+      return data.urls?.regular;
     } catch (err) {
       /* Added this check because we know the API has a rate limit
          of 50 successfull calls an hour. */
