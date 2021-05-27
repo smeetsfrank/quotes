@@ -3,6 +3,7 @@ export interface QuoteProps {
     author: string;
     quote: string;
     permalink?: string;
+    correct?: boolean;
 }
 
 export interface Quotes {
