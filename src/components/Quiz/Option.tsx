@@ -5,7 +5,7 @@ import classes from './Option.module.scss';
 type Props = {
     id: number;
     author:string;
-    selectedOption: (id: number) => any;
+    selectedOption: (id: number) => void;
 }
 
 const RadioButton: React.FC<Props> = ({ id, author, selectedOption }) => {
