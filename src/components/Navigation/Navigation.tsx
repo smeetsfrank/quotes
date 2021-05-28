@@ -32,13 +32,15 @@ const Navigation: React.FC<Props> = ({
 
   return (
     <>
-      <button className={`${classes.trigger} ${isOpen && classes.open}`} type="button" onClick={toggleNavigationHandler}>
+      <button className={`${classes.trigger} ${isOpen && classes.open}`} type="button" aria-label="navigationToggle" onClick={toggleNavigationHandler}>
         <div className={classes['nav-icon']}>
           <div />
         </div>
 
       </button>
       <nav className={`${classes['main-navigation']} ${isOpen && classes.open}`}>
+        {isOpen
+        && (
         <ul>
           {gameState.mode !== 'playing'
           && (
@@ -47,6 +49,7 @@ const Navigation: React.FC<Props> = ({
           {gameState.mode === 'playing'
           && <li><button type="button" onClick={gameModeHandler}>Stop the quiz</button></li>}
         </ul>
+        )}
       </nav>
 
     </>
