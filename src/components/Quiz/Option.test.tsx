@@ -4,13 +4,11 @@ import userEvent from '@testing-library/user-event';
 import Option from './Option';
 
 const optionComponent = (
-  <>
-    <Option
-      id={1}
-      author="Frank"
-      selectedOption={() => undefined}
-    />
-  </>
+  <Option
+    id={1}
+    author="Frank"
+    selectedOption={() => undefined}
+  />
 );
 describe('Option', () => {
   test('Renders correct label', () => {
