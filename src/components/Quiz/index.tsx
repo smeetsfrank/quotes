@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
-import useHttp from '../../hooks/use-http';
+
 import { QuoteProps, GameProps } from '../../models/models';
+
+import { fetchPopularQuotes } from '../../api/quotes';
 import { fetchImage } from '../../api/unsplash';
 
 import Options from './Options';
@@ -17,19 +19,8 @@ const Question: React.FC = () => {
   const [game, setGame] = useState<GameProps>({ answers: [], step: 0, progress: 0 });
   const [quotes, setQuotes] = useState<any>();
   const [authors, setAuthors] = useState<any>();
-  const [imageRendered, setImageRendered] = useState<boolean>(false);
+  const [imageHasRendered, setImageHasRendered] = useState<boolean>(false);
   const [backgroundImage, setBackgroundImage] = useState<string | undefined>('placeholder.jpg');
-
-  const { sendRequest: fetchQuote } = useHttp();
-
-  const fetchingBackgroundImage = async () => {
-    const responseImage = await fetchImage(`https://api.unsplash.com/photos/random?${
-      new URLSearchParams({
-        query: 'minimal',
-        client_id: 'MzZUemb6Dpm7QPA1Edx12DF-O81dgKq7rrDkB91MPRE',
-      })}`);
-    setBackgroundImage(responseImage);
-  };
 
   const quoteHandler = (data: QuoteProps[]) => {
     /* Strip unknown authors from list */
@@ -52,6 +43,26 @@ const Question: React.FC = () => {
     setAuthors(removeDuplicateAuthors);
   };
 
+  const fetchingImage = async () => {
+    const response = await fetchImage(`https://api.unsplash.com/photos/random?${
+      new URLSearchParams({
+        query: 'minimal',
+        client_id: 'MzZUemb6Dpm7QPA1Edx12DF-O81dgKq7rrDkB91MPRE',
+      })}`);
+    /* Added this check to because of the limited API calls */
+    if (response) {
+      setBackgroundImage(`${response}&format=auto`);
+    } else {
+      setImageHasRendered(true);
+      setBackgroundImage('placeholder.jpg');
+    }
+  };
+
+  const fetchingQuotes = async () => {
+    const repsonse: any = await fetchPopularQuotes('http://quotes.stormconsultancy.co.uk/popular.json');
+    quoteHandler(repsonse);
+  };
+
   /* let/const used within multiple functions */
   let answer: number;
   const currentStep = game.step!;
@@ -69,7 +80,8 @@ const Question: React.FC = () => {
 
   const restartGame = () => {
     setGame({ answers: [], step: 0, progress: 0 });
-    fetchingBackgroundImage();
+    fetchingQuotes();
+    fetchingImage();
   };
 
   // next step + save store answer
@@ -90,8 +102,8 @@ const Question: React.FC = () => {
       }));
     }
     if (gameProgress < 4) {
-      setImageRendered(false);
-      fetchingBackgroundImage();
+      setImageHasRendered(false);
+      fetchingImage();
       setGame((prevState: GameProps) => ({
         answers: [...prevState.answers, answer],
         step: currentStep + 1,
@@ -101,20 +113,20 @@ const Question: React.FC = () => {
   };
 
   const checkRenderedImage = () => {
-    setImageRendered(true);
+    setImageHasRendered(true);
   };
 
   useEffect(() => {
-    fetchQuote({ url: 'http://quotes.stormconsultancy.co.uk/popular.json' }, quoteHandler);
-    fetchingBackgroundImage();
+    fetchingQuotes();
+    fetchingImage();
   }, []);
 
   return (
     <>
       <BackgroundImage checkRenderedImage={checkRenderedImage} imageUrl={backgroundImage} />
       <div className={`${classes['quote-wrapper']} ${gameProgress === 5 && classes.scoreboard}`}>
-        {!imageRendered && <Loader />}
-        {(gameProgress < 5 && imageRendered) && (
+        {!imageHasRendered && <Loader />}
+        {(gameProgress < 5 && imageHasRendered) && (
         <>
           <form onSubmit={submitHandler}>
             <h2>{quotes?.[currentStep].quote}</h2>
