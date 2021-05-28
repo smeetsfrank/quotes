@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { GameStateProps } from './models/models';
 
 import Navigation from './components/Navigation/Navigation';
-import Quote from './components/Quote/Quote';
+import Quote from './components/Quote';
 import Question from './components/Quiz';
 
 const App: React.FC = () => {
