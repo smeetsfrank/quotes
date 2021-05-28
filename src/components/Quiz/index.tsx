@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt } from '@fortawesome/free-solid-svg-icons';
 import useHttp from '../../hooks/use-http';
-import { QuoteProps, GameProps, FetchedBackground } from '../../models/models';
+import { QuoteProps, GameProps } from '../../models/models';
+import { fetchImage } from '../../api/unsplash';
 
 import Options from './Options';
 import Progress from './Progress';
@@ -18,9 +18,18 @@ const Question: React.FC = () => {
   const [quotes, setQuotes] = useState<any>();
   const [authors, setAuthors] = useState<any>();
   const [imageRendered, setImageRendered] = useState<boolean>(false);
-  const [backgroundImage, setBackgroundImage] = useState<string>('placeholder.jpg');
+  const [backgroundImage, setBackgroundImage] = useState<string | undefined>('placeholder.jpg');
 
   const { sendRequest: fetchQuote } = useHttp();
+
+  const fetchingBackgroundImage = async () => {
+    const responseImage = await fetchImage(`https://api.unsplash.com/photos/random?${
+      new URLSearchParams({
+        query: 'minimal',
+        client_id: 'MzZUemb6Dpm7QPA1Edx12DF-O81dgKq7rrDkB91MPRE',
+      })}`);
+    setBackgroundImage(responseImage);
+  };
 
   const quoteHandler = (data: QuoteProps[]) => {
     /* Strip unknown authors from list */
@@ -43,27 +52,6 @@ const Question: React.FC = () => {
     setAuthors(removeDuplicateAuthors);
   };
 
-  const fetchImage = async () => {
-    try {
-      const response = await axios.get<FetchedBackground>(`https://api.unsplash.com/photos/random?${
-        new URLSearchParams({
-          query: 'minimal',
-          client_id: 'MzZUemb6Dpm7QPA1Edx12DF-O81dgKq7rrDkB91MPRE',
-        })}`);
-      const { data } = response;
-      setBackgroundImage(`${data.urls?.regular}&format=auto`);
-      return;
-    } catch (err) {
-      if (err.response.status === 403) {
-        setBackgroundImage('placeholder.jpg');
-        setImageRendered(true);
-        return;
-      }
-      const errorMessage = err.response.data;
-      throw new Error(`Error: ${errorMessage}`);
-    }
-  };
-
   /* let/const used within multiple functions */
   let answer: number;
   const currentStep = game.step!;
@@ -81,8 +69,7 @@ const Question: React.FC = () => {
 
   const restartGame = () => {
     setGame({ answers: [], step: 0, progress: 0 });
-    fetchQuote({ url: 'http://quotes.stormconsultancy.co.uk/popular.json' }, quoteHandler);
-    fetchImage();
+    fetchingBackgroundImage();
   };
 
   // next step + save store answer
@@ -104,7 +91,7 @@ const Question: React.FC = () => {
     }
     if (gameProgress < 4) {
       setImageRendered(false);
-      fetchImage();
+      fetchingBackgroundImage();
       setGame((prevState: GameProps) => ({
         answers: [...prevState.answers, answer],
         step: currentStep + 1,
@@ -119,7 +106,7 @@ const Question: React.FC = () => {
 
   useEffect(() => {
     fetchQuote({ url: 'http://quotes.stormconsultancy.co.uk/popular.json' }, quoteHandler);
-    fetchImage();
+    fetchingBackgroundImage();
   }, []);
 
   return (

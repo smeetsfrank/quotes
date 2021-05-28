@@ -2,7 +2,7 @@ import React from 'react';
 import classes from './BackgroundImage.module.scss';
 
 type Props = {
-    imageUrl: string;
+    imageUrl: string | undefined;
     checkRenderedImage: () => void;
 }
 
