@@ -141,7 +141,7 @@ const Question: React.FC = () => {
           </form>
         </>
         )}
-        {gameProgress !== 5 && <Progress step={game?.step} /> }
+        {gameProgress !== 5 && <Progress steps={quotes?.length} current={game?.step} /> }
         {(gameProgress === 5) && (
         <>
           <button type="button" onClick={restartGame} className={classes.restart}>
